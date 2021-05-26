@@ -5,11 +5,14 @@ addEventListener("fetch", (event) => {
     case "PROPFIND":
       response = propfind();
       break;
+     case "OPTIONS":
+      response = options();
+      break;
       
     default:
       console.log(request);
       response = new Response("Hello Moon", {
-        headers: { "content-type": "text/plain" },
+        headers: { "Content-Type": "text/plain" },
       })
   }
   
@@ -39,6 +42,17 @@ function propfind() {
     statusText: "Multi-Status",
     headers: {
       "content-type": `text/xml`,
+    },
+  });
+}
+
+function options() {
+  return new Response({
+    status: 204,
+    statusText: "No Content",
+    headers: {
+      "Allow": "OPTIONS, GET, HEAD, PROPFIND",
+      "Cache-Control": `no-cache`,
     },
   });
 }
