@@ -1,43 +1,47 @@
 addEventListener("fetch", (event) => {
-  evend.respondWith(async () => {
-    const { request } = event; 
-    console.log(request);
-    console.log(await request.body().text());
-
-    let response;
-    switch (request.method) {
-      case "PROPFIND":
-        response = propfind();
-        break;
-       case "OPTIONS":
-        response = options();
-        break;
-        
-      default:
-        response = new Response("Hello Moon", {
-          headers: { "Content-Type": "text/plain" },
-        })
-    }
-    
-    event.respondWith(response);
-  });
+  event.respondWith(handleRequest(event.request));
 });
+
+async function handleRequest(request) {
+  console.log(request);
+  console.log(new TextDecoder().decode(new Uint8Array(await request.arrayBuffer())));
+
+  let response;
+  switch (request.method) {
+    case "GET":
+    case "PROPFIND":
+      response = propfind();
+      break;
+     case "OPTIONS":
+      response = options();
+      break;
+
+    default:
+      response = new Response("Hello Moon", {
+        headers: { "Content-Type": "text/plain" },
+      })
+  }
+
+  return response;
+}
 
 const PROPS = `
 <?xml version="1.0" ?>
-<D:multistatus xmlns:D="DAV:">
-  <D:response>
-    <D:href>/deno.exe</D:href>
-    <D:propstat>
-      <D:prop>
-        <D:getcontenttype>application/binary</D:getcontenttype>
-        <D:creationdate>2021-05-26T11:22:33.444Z</D:creationdate>
-        <D:resourcetype />
-      </D:prop>
-      <D:status>HTTP/1.1 200 OK</D:status>
-    </D:propstat>
-    </D:response>
-</D:multistatus>
+<d:multistatus 
+  xmlns:a="urn:uuid:c2f41010-65b3-11d1-a29f-00aa00c14882/"
+  xmlns:d="DAV:"
+>
+  <d:response>
+    <d:href>https://install.deno.dev/dir/deno.exe</d:href>
+    <d:propstat>
+      <d:prop>
+        <d:getcontentlength a:dt="int">1234</d:getcontentlength>
+        <d:getcontenttype>application/binary</d:getcontenttype>
+      </d:prop>
+      <d:status>HTTP/1.1 200 OK</d:status>
+    </d:propstat>
+  </d:response>
+</d:multistatus>
 `.trim();
 
 function propfind() {
@@ -56,7 +60,8 @@ function options() {
     statusText: "No Content",
     headers: {
       "Allow": "OPTIONS, GET, HEAD, PROPFIND",
-      "Cache-Control": `no-cache`,
+      "Cache-Control": `private`,
+      "DAV": "1,2",
     },
   });
 }
