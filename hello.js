@@ -1,5 +1,7 @@
 addEventListener("fetch", (event) => {
   const { request } = event; 
+  console.log(request);
+
   let response;
   switch (request.method) {
     case "PROPFIND":
@@ -10,7 +12,6 @@ addEventListener("fetch", (event) => {
       break;
       
     default:
-      console.log(request);
       response = new Response("Hello Moon", {
         headers: { "Content-Type": "text/plain" },
       })
@@ -26,7 +27,7 @@ const PROPS = `
     <D:href>/deno.exe</D:href>
     <D:propstat>
       <D:prop>
-        <A:getcontenttype>application/binary</D:getcontenttype>
+        <D:getcontenttype>application/binary</D:getcontenttype>
         <D:creationdate>2021-05-26T11:22:33.444Z</D:creationdate>
         <D:resourcetype />
       </D:prop>
