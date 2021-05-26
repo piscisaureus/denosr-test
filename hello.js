@@ -47,7 +47,7 @@ function propfind() {
 }
 
 function options() {
-  return new Response({
+  return new Response("", {
     status: 204,
     statusText: "No Content",
     headers: {
