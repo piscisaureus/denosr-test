@@ -3,7 +3,7 @@ addEventListener("fetch", (event) => {
   let response;
   switch (request.method) {
     case "PROPFIND":
-      response = profind();
+      response = propfind();
       break;
       
     default:
