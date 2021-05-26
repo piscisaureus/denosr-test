@@ -1,24 +1,26 @@
 addEventListener("fetch", (event) => {
-  const { request } = event; 
-  console.log(request);
-  console.log(await request.body().text());
+  evend.respondWith(async () => {
+    const { request } = event; 
+    console.log(request);
+    console.log(await request.body().text());
 
-  let response;
-  switch (request.method) {
-    case "PROPFIND":
-      response = propfind();
-      break;
-     case "OPTIONS":
-      response = options();
-      break;
-      
-    default:
-      response = new Response("Hello Moon", {
-        headers: { "Content-Type": "text/plain" },
-      })
-  }
-  
-  event.respondWith(response);
+    let response;
+    switch (request.method) {
+      case "PROPFIND":
+        response = propfind();
+        break;
+       case "OPTIONS":
+        response = options();
+        break;
+        
+      default:
+        response = new Response("Hello Moon", {
+          headers: { "Content-Type": "text/plain" },
+        })
+    }
+    
+    event.respondWith(response);
+  });
 });
 
 const PROPS = `
