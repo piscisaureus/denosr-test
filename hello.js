@@ -1,6 +1,7 @@
 addEventListener("fetch", (event) => {
   const { request } = event; 
   console.log(request);
+  console.log(await request.body().text());
 
   let response;
   switch (request.method) {
